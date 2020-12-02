@@ -3,6 +3,7 @@ package com.jitterted.ebp.blackjack;
 import org.fusesource.jansi.Ansi;
 
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -33,6 +34,13 @@ public class Game {
 
   public Game() {
     deck = new Deck();
+  }
+
+  void display(Hand hand) {
+    System.out.println(hand.cardStream()
+                           .map(Card::display)
+                           .collect(Collectors.joining(
+                               ansi().cursorUp(6).cursorRight(1).toString())));
   }
 
   public void initialDeal() {
@@ -135,7 +143,7 @@ public class Game {
 
     System.out.println();
     System.out.println("Player has: ");
-    playerHand.display();
+    display(playerHand);
     System.out.println(" (" + playerHand.value() + ")");
   }
 
@@ -156,12 +164,12 @@ public class Game {
   private void displayFinalGameState() {
     System.out.print(ansi().eraseScreen().cursor(1, 1));
     System.out.println("Dealer has: ");
-    dealerHand.display();
+    display(dealerHand);
     System.out.println(" (" + dealerHand.value() + ")");
 
     System.out.println();
     System.out.println("Player has: ");
-    playerHand.display();
+    display(playerHand);
     System.out.println(" (" + playerHand.value() + ")");
   }
 }
