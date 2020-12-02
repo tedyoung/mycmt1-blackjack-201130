@@ -74,19 +74,15 @@ public class Game {
   private void determineGameOutcome(boolean playerBusted) {
     if (playerBusted) {
       System.out.println("You Busted, so you lose.  💸");
-    } else if (isDealerBusted()) {
+    } else if (dealerHand.isBusted()) {
       System.out.println("Dealer went BUST, Player wins! Yay for you!! 💵");
-    } else if (dealerHand.value() < playerHand.value()) {
+    } else if (playerHand.beats(dealerHand)) {
       System.out.println("You beat the Dealer! 💵");
-    } else if (dealerHand.value() == playerHand.value()) {
+    } else if (dealerHand.pushes(playerHand)) {
       System.out.println("Push: The house wins, you Lose. 💸");
     } else {
       System.out.println("You lost to the Dealer. 💸");
     }
-  }
-
-  private boolean isDealerBusted() {
-    return dealerHand.value() > 21;
   }
 
   private boolean playerPlays() {
@@ -100,7 +96,7 @@ public class Game {
       }
       if (playerHits(playerChoice)) {
         dealCardToPlayer();
-        if (playerHand.value() > 21) {
+        if (playerHand.isBusted()) {
           playerBusted = true;
         }
       } else {
@@ -113,7 +109,7 @@ public class Game {
   private void dealerPlays(boolean playerBusted) {
     // Dealer makes its choice automatically based on a simple heuristic (<=16, hit, 17>stand)
     if (!playerBusted) {
-      while (dealerHand.value() <= 16) {
+      while (dealerHand.dealerShouldHit()) {
         dealCardToDealer();
       }
     }
@@ -144,7 +140,7 @@ public class Game {
     System.out.println();
     System.out.println("Player has: ");
     display(playerHand);
-    System.out.println(" (" + playerHand.value() + ")");
+    System.out.println(" (" + playerHand.displayValue() + ")");
   }
 
   private void displayBackOfCard() {
@@ -165,11 +161,11 @@ public class Game {
     System.out.print(ansi().eraseScreen().cursor(1, 1));
     System.out.println("Dealer has: ");
     display(dealerHand);
-    System.out.println(" (" + dealerHand.value() + ")");
+    System.out.println(" (" + dealerHand.displayValue() + ")");
 
     System.out.println();
     System.out.println("Player has: ");
     display(playerHand);
-    System.out.println(" (" + playerHand.value() + ")");
+    System.out.println(" (" + playerHand.displayValue() + ")");
   }
 }
