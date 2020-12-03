@@ -9,13 +9,28 @@ public class Wallet {
   }
 
   public void addMoney(int amount) {
-    if (amount < 0) {
-      throw new IllegalArgumentException();
-    }
+    ensureAmountGreaterThanOrEqualToZero(amount);
     balance += amount;
   }
 
   public int balance() {
     return balance;
+  }
+
+  public void bet(int amount) {
+    ensureSufficientBalance(amount);
+    balance -= amount;
+  }
+
+  private void ensureSufficientBalance(int amount) {
+    if (amount > balance) {
+      throw new IllegalArgumentException();
+    }
+  }
+
+  private void ensureAmountGreaterThanOrEqualToZero(int amount) {
+    if (amount < 0) {
+      throw new IllegalArgumentException();
+    }
   }
 }
